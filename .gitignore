@@ -1,0 +1,4 @@
+.env
+flask.log
+__pycache__/
+.idea/

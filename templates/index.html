@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTMX + Flask + PostgreSQL</title>
+    <script src="https://unpkg.com/htmx.org@1.9.6"></script>
+
+    <!-- 添加 favicon -->
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+</head>
+<body>
+    <h1>博客文章</h1>
+
+    <!-- 页面加载时自动获取文章 -->
+    <div id="post-list" hx-get="/posts" hx-trigger="load" hx-swap="innerHTML">
+        <!-- 文章内容将在这里加载 -->
+    </div>
+
+    <h2>添加文章</h2>
+    <form hx-post="/add_post" hx-target="#post-list" hx-swap="beforeend">
+        <input type="text" name="title" placeholder="标题" required>
+        <textarea name="content" placeholder="内容" required></textarea>
+        <button type="submit">提交</button>
+    </form>
+</body>
+</html>
+
