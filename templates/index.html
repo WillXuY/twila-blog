@@ -3,26 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HTMX + Flask + PostgreSQL</title>
+    <title>我的博客</title>
     <script src="https://unpkg.com/htmx.org@1.9.6"></script>
-
-    <!-- 添加 favicon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px;
+        }
+        .container {
+            width: 60%;
+            padding: 20px;
+        }
+        .side-image {
+            width: 20%;
+            text-align: center;
+        }
+        .side-image img {
+            width: 100%;
+            border-radius: 10px;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        .card {
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .truncate {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+    </style>
 </head>
 <body>
-    <h1>博客文章</h1>
+<!-- 左侧猫图片 -->
+<div class="side-image">
+    <img src="/static/cat_left.jpg" alt="猫">
+</div>
 
-    <!-- 页面加载时自动获取文章 -->
-    <div id="post-list" hx-get="/posts" hx-trigger="load" hx-swap="innerHTML">
+<!-- 博客主要内容 -->
+<div class="container">
+    <h1 class="blue-text text-darken-2">博客文章</h1>
+
+    <div id="post-list" hx-get="/posts?page=1" hx-trigger="load" hx-swap="innerHTML">
         <!-- 文章内容将在这里加载 -->
     </div>
 
-    <h2>添加文章</h2>
-    <form hx-post="/add_post" hx-target="#post-list" hx-swap="beforeend">
-        <input type="text" name="title" placeholder="标题" required>
-        <textarea name="content" placeholder="内容" required></textarea>
-        <button type="submit">提交</button>
-    </form>
+    <div class="pagination center-align">
+        <button class="btn blue" hx-get="/posts?page=prev" hx-target="#post-list" hx-swap="innerHTML">上一页</button>
+        <button class="btn blue" hx-get="/posts?page=next" hx-target="#post-list" hx-swap="innerHTML">下一页</button>
+    </div>
+</div>
+
+<!-- 右侧猫图片 -->
+<div class="side-image">
+    <img src="/static/cat_right.jpg" alt="猫">
+</div>
 </body>
 </html>
-
