@@ -80,5 +80,20 @@ def add_post():
     </div>
     """
 
+@app.route("/posts_json")
+def get_posts_json():
+    page = int(request.args.get("page", 1))
+    per_page = 10
+    offset = (page - 1) * per_page
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, title, LEFT(content, 100) FROM posts ORDER BY id DESC LIMIT %s OFFSET %s", (per_page, offset))
+    rows = cursor.fetchall()
+    conn.close()
+
+    posts = [{"id": r[0], "title": r[1], "preview": r[2]} for r in rows]
+    return {"posts": posts}
+
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=5000)
