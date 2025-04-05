@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>我的博客</title>
     <script src="https://unpkg.com/htmx.org@1.9.6"></script>
+    <script type="module" src="{{ url_for('static', filename='js/blog-card.js') }}"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
@@ -44,26 +45,49 @@
 <body>
 <!-- 左侧猫图片 -->
 <div class="side-image">
-    <img src="/static/cat_left.jpg" alt="猫">
+    <img src="/static/img/cat_left.jpg" alt="猫">
 </div>
 
 <!-- 博客主要内容 -->
 <div class="container">
     <h1 class="blue-text text-darken-2">博客文章</h1>
 
-    <div id="post-list" hx-get="/posts?page=1" hx-trigger="load" hx-swap="innerHTML">
-        <!-- 文章内容将在这里加载 -->
-    </div>
+    <div id="post-list"></div>
 
     <div class="pagination center-align">
-        <button class="btn blue" hx-get="/posts?page=prev" hx-target="#post-list" hx-swap="innerHTML">上一页</button>
-        <button class="btn blue" hx-get="/posts?page=next" hx-target="#post-list" hx-swap="innerHTML">下一页</button>
+        <button class="btn blue" onclick="loadPosts(currentPage - 1)">上一页</button>
+        <button class="btn blue" onclick="loadPosts(currentPage + 1)">下一页</button>
     </div>
 </div>
 
 <!-- 右侧猫图片 -->
 <div class="side-image">
-    <img src="/static/cat_right.jpg" alt="猫">
+    <img src="/static/img/cat_right.jpg" alt="猫">
 </div>
+
+<script>
+    let currentPage = 1;
+
+    async function loadPosts(page = 1) {
+      const res = await fetch(`/posts_json?page=${page}`);
+      const data = await res.json();
+
+      const list = document.getElementById('post-list');
+      list.innerHTML = '';
+      data.posts.forEach(post => {
+        const el = document.createElement('blog-card');
+        el.title = post.title;
+        el.content = post.preview;
+        el.postId = post.id;
+        list.appendChild(el);
+      });
+
+      currentPage = page;
+    }
+
+    // 初始加载
+    loadPosts();
+</script>
+
 </body>
 </html>
