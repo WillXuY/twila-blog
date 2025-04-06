@@ -5,7 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>我的博客</title>
     <script src="https://unpkg.com/htmx.org@1.9.6"></script>
+    <!-- blog-card 自定义组件 -->
     <script type="module" src="{{ url_for('static', filename='js/blog-card.js') }}"></script>
+
+    <!-- main.js，包含页面逻辑 -->
+    <script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
@@ -64,30 +69,6 @@
 <div class="side-image">
     <img src="/static/img/cat_right.jpg" alt="猫">
 </div>
-
-<script>
-    let currentPage = 1;
-
-    async function loadPosts(page = 1) {
-      const res = await fetch(`/posts_json?page=${page}`);
-      const data = await res.json();
-
-      const list = document.getElementById('post-list');
-      list.innerHTML = '';
-      data.posts.forEach(post => {
-        const el = document.createElement('blog-card');
-        el.title = post.title;
-        el.content = post.preview;
-        el.postId = post.id;
-        list.appendChild(el);
-      });
-
-      currentPage = page;
-    }
-
-    // 初始加载
-    loadPosts();
-</script>
 
 </body>
 </html>
