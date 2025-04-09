@@ -1,0 +1,60 @@
+* 动态规划算法： 0-1 背包问题
+:PROPERTIES:
+:created: [2025-04-09]
+:END:
+
+** 问题描述
+1. 给定 n 个物品，每个物品有重量 w[i] 和价值 v[i]。
+2. 在总重量不超过背包容量 w 的情况下，选择若干个物品使得总价值最大。
+3. 每个物品最多选一次
+
+** 动态规划解法思路
+- 定义状态：
+  - dp[i][j] 表示前 i 个物品中选取若干个，总重量不超过 j 时能获得的最大价值。
+
+- 初始条件：
+  - dp[0][j] = 0, 表示没有物品时价值为 0
+
+- 状态转移方程：
+  - 如果不选择第 i 个物品：dp[i][j] = dp[i - 1][j]
+  - 如果选择第 i 个物品（前提是 j >= w[i - 1]）：
+    dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - w[i - 1]] + v[i - 1])
+
+** Python 实现
+#+begin_src python :results output
+  def knapsack_01(weights, values, capacity):
+      n = len(weights)
+      dp = [[0] * (capacity + 1) for _ in range(n + 1)]
+
+      for i in range(1, n + 1):
+          for j in range(capacity + 1):
+              if j < weights[i - 1]:
+                  dp[i][j] = dp[i - 1][j]
+              else:
+                  dp[i][j] = max(dp[i - 1][j],
+                                 dp[i - 1][j - weights[i - 1]] + values[i - 1])
+
+      for row in dp:
+          print(" ".join(f"{num:>3}" for num in row))
+
+      return dp[n][capacity]
+
+  # test data
+  weights = [2, 1, 3, 2]
+  values = [12, 10, 20, 15]
+  capacity = 5
+  print(knapsack_01(weights, values, capacity))
+
+#+end_src
+
+#+RESULTS:
+:   0   0   0   0   0   0
+:   0   0  12  12  12  12
+:   0  10  12  22  22  22
+:   0  10  12  22  30  32
+:   0  10  15  25  30  37
+: 37
+
+** 总结
+- 0-1 背包是经典的动态规划问题
+- 解题关键在于明确状态方程和转移方程
