@@ -1,0 +1,69 @@
+* 最长递增子序列 (Longest Increasing Subsequence, LIS) 问题的动态规划解
+
+** 问题描述：
+1. 输入：一个包含 n 个整数的数组 nums, 其中 1 <= n <= 1000,
+   -10^4 <= nums[i] <= 10^4。
+2. 输出：返回最长递增子序列的长度。
+
+
+**  测试用例
+
+| index | nums                         | expected | description              |
+|-------+------------------------------+----------+--------------------------|
+|     1 | [10, 9, 2, 5, 3, 7, 101, 18] |        4 | 测试一个正常的递增序列   |
+|     2 | [0, 1, 0, 3, 2, 3]           |        4 | 测试一个有重复元素的情况 |
+|     3 | [7, 7, 7, 7, 7, 7, 7]        |        1 | 所有元素相等的情况       |
+|     4 | [1, 2, 3, 4, 5, 6, 7, 8, 9]  |        9 | 完全递增的情况           |
+|     5 | [9, 8, 7, 6, 5, 4, 3, 2, 1]  |        1 | 完全递减的情况           |
+|     6 | [1, 3, 2, 4, 6, 5]           |        4 | 测试一个部分递增的情况   |
+
+// exports none 可以避免测试数据输出到最后的结果
+
+#+name: test_case
+#+begin_src text :exports none
+  10, 9, 2, 5, 3, 7, 101, 18
+
+  0, 1, 0, 3, 2, 3
+
+  7, 7, 7, 7, 7, 7, 7
+
+  1, 2, 3, 4, 5, 6, 7, 8, 9
+
+  9, 8, 7, 6, 5, 4, 3, 2, 1
+
+  1, 3, 2, 4, 6, 5
+
+#+end_src
+
+#+begin_src python :results output :var input=test_case
+  def main():
+      test_cases = input.strip().split("\n\n")
+      for index, case in enumerate(test_cases, 1):
+          output = findLis(case)
+          print(f"Output {index} : {output}")
+
+  def findLis(case):
+      # 输入内容转换成数组
+      nums = list(map(int, case.split(', ')))
+      # 新增 dp 数组，内容为1, 长度等于 nums
+      dp = [1] * len(nums)
+      for i in range(len(nums)):
+          for j in range(i):
+              # 比较 nums[i] 之前的每一个数据 j，如果 i 更大则符合条件
+              if nums[i] > nums[j]:
+                  # 符合条件可以长度 +1
+                  dp[i] = max(dp[i], dp[j] + 1)
+                  # 否则保持 dp[i] 不变
+      return max(dp)
+
+  if __name__ == "__main__":
+      main()
+#+end_src
+
+#+RESULTS:
+: Output 1 : 4
+: Output 2 : 4
+: Output 3 : 1
+: Output 4 : 9
+: Output 5 : 1
+: Output 6 : 4
