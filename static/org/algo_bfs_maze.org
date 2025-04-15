@@ -1,0 +1,137 @@
+*  迷宫问题
+
+**  问题描述
+1. 给定一个 h x w 的迷宫，用0表示可以通行的各自，用1表示墙。
+2. 起点是 (0, 0), 终点是 (h-1, w-1)
+3. 每次移动只可以是上下左右。不能穿墙，不能走出边界
+4. 需要输出唯一的起点到重点的路径。（保证存在且唯一）
+
+**  测试用例
+
+#+name: test_case
+#+begin_src text :exports none
+  1 1
+  0
+  (0, 0)
+
+  2 2
+  0 0
+  1 0
+  (0, 0) - (0, 1) - (1, 1)
+
+  3 3
+  0 1 0
+  0 1 0
+  0 0 0
+  (0, 0) - (1, 0) - (2, 0) - (2, 1) - (2, 2)
+
+  4 4
+  0 0 1 0
+  1 0 1 0
+  1 0 0 0
+  1 1 1 0
+  (0, 0) - (0, 1) - (1, 1) - (2, 1) - (2, 2) - (2, 3) - (3, 3)
+
+#+end_src
+
+#+begin_src python :results output :var data=test_case
+  # import sys
+  # 高效双端队列
+  from collections import deque
+
+  def main():
+      # input 是一个内建函数名，不应该被用作变量名
+      # 获取系统输入，在 org 中则直接传入
+      # data = sys.stdin.read()
+      # 根据一个空行来分割每一个测试用例
+      test_cases = data.strip().split('\n\n')
+      for test_case in test_cases:
+          # 每一个测试用例分割成行
+          lines = test_case.splitlines()
+          # 第一行为高度和宽度
+          h, w = map(int, lines[0].split())
+          maze = [list(map(int, line.split())) for line in lines[1: h+1]]
+          path = bfs(maze, h, w)
+          # 字符串与其他类型拼接使用，不是+
+          print("Output is  :", path)
+          # 解析最后一行的内容并做出比较
+          expected = parse_path(lines[h + 1].strip())
+
+          parts = lines[h+1].strip().split(" - ")
+          expected = []
+          for p in parts:
+              r, c = map(int, p.strip("()").split(","))
+              # 这里需要两个括号，外层是参数，内层是新建元组
+              expected.append((r, c))
+          print("Expected is:", expected)
+          # "expected" + output == expected
+          # 优先级错误,这么写会先相加后比较
+          print("Same with expected", path == expected)
+
+  def parse_path(line):
+      parts = line.split(" - ")
+      # 循环所有的 parts，每一个p处理括号，分割，转化为 int,写入 tuple
+      return [tuple(map(int, p.strip("()").split(","))) for p in parts]
+
+  def bfs(maze, h, w):
+      # 记录四个可行方向，简化 if
+      directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+      # 记录每层迭代的内容
+      queue = deque()
+      # 添加初始值
+      queue.append((0, 0))
+      # 添加一个是否已经到达过的 boolean 二维数组
+      visited = [[False for _ in range(w)] for _ in range(h)]
+      # 定义一个回溯用的二维数组,size = h * w
+      prev = [None for _ in range(h * w)]
+      visited[0][0] = True
+      prev[0] = (-1, -1)
+
+      while queue:
+          # 获取队列中的一个元素
+          node = queue.popleft()
+          # 检查是否已经到了终点 index = h-1, w-1
+          if node == (h - 1, w - 1):
+              # 回溯路径
+              path = []
+              while node != (-1, -1):
+                  path.append(node)
+                  node = prev[node[0] * w + node[1]]
+              # 循环完成之后再进行回溯
+              path.reverse()
+              return path
+
+          # 获取四个方向的坐标
+          for d in directions:
+              row = d[0] + node[0]
+              col = d[1] + node[1]
+              is_out = row < 0 or col < 0 or row >= h or col >= w
+              # 不能出界，已经访问和遇到墙 '1'
+              if is_out or visited[row][col] or maze[row][col] == 1:
+                  continue
+              next_node = (row, col)
+              queue.append(next_node)
+              prev[row * w + col] = node
+              visited[row][col] = True
+      # 保持返回类型一致为 list
+      return []
+
+  if __name__ == "__main__":
+      main()
+#+end_src
+
+#+RESULTS:
+#+begin_example
+Output is  : [(0, 0)]
+Expected is: [(0, 0)]
+Same with expected True
+Output is  : [(0, 0), (0, 1), (1, 1)]
+Expected is: [(0, 0), (0, 1), (1, 1)]
+Same with expected True
+Output is  : [(0, 0), (1, 0), (2, 0), (2, 1), (2, 2)]
+Expected is: [(0, 0), (1, 0), (2, 0), (2, 1), (2, 2)]
+Same with expected True
+Output is  : [(0, 0), (0, 1), (1, 1), (2, 1), (2, 2), (2, 3), (3, 3)]
+Expected is: [(0, 0), (0, 1), (1, 1), (2, 1), (2, 2), (2, 3), (3, 3)]
+Same with expected True
+#+end_example
