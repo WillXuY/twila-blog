@@ -1,4 +1,4 @@
-# Blog project by Will Xu
+# Twill Weaves Ideas Lightly & Lucidly!
 
 This is a blog project by Will Xu, built using the HTMX and Flask frameworks. To get started, you will need to set up the following:
 
