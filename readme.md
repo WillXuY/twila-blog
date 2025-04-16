@@ -1,4 +1,5 @@
-# Twill Weaves Ideas Lightly & Lucidly!
+# TWILA Whispers Ideas Lyrically & Aesthetically.
+黄昏女孩如诗般唯美地低语着灵感。
 
 This is a blog project by Will Xu, built using the HTMX and Flask frameworks. To get started, you will need to set up the following:
 
