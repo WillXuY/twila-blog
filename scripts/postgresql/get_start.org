@@ -1,0 +1,106 @@
+* 在云端配置 Podman 启动 PostgreSQL 运行, 并通过 SSH 隧道连接
+
+** I. 所需软件清单
+
+- *本地* (以 Debian 为例)
+  - ~ssh~ : 客户端(一般默认已经安装)
+    - ~sudo apt install openssh-client~
+  - ~psql~ : 连接 PostgreSQL 的命令行客户端
+    - ~sudo apt install postgresql-client~
+  - dbeaver : 可选图形界面
+    - ~sudo apt install flatpak~
+    - ~flatpak install flathub io.dbeaver.DBeaverCommunity~
+    - ~flatpak run io.dbeaver.DBeaverCommunity~
+
+- *云服务器* (以 Alma/Rocky/RHEL 为例)
+  - ~podman~ : 容器运行环境,用于部署 PostgreSQL 容器
+    - ~sudo dnf install podman~
+  - ~ssh~ : 服务端 (通常默认已经启用)
+    - ~sudo dnf install openssh-server~
+    - ~sudo systemctl enable --now ssh~
+
+** II. 在本地或云服务器上安装 Podman 和容器化运行 PostgreSQL
+
+*** 1. 完整的容器运行 postgresql 脚本
+
+*注意!* : 运行脚本前需要手动维护一个 .env 文件, 建议编辑使用完后使用 GPG 加密处理。
+
+*** 2. .env 需要自定义的内容
+
+#+begin_src env
+  POSTGRESQL_USER=admin
+  POSTGRESQL_PASSWORD=passwd
+  POSTGRESQL_DB=mydb
+#+end_src
+
+*** 3. 加密 .env
+
+#+begin_src bash
+  # 加密一个 .env
+  gpg --symmetric .env
+  # 这里会生成 .env.gpg 文件，放到同级别下
+  mv <path-to-env>/.env.gpg <path-to-project>/scripts/postgresql/
+#+end_src
+
+*** 4. 运行容器脚本
+
+[[file:./podman_postgresql_selinux.sh]]
+
+*** 2. Podman 常用操作
+
+*注意* : 如果是 sudo 运行的 podman， 下面的命令中请自行加上 sudo
+
+- 清理无效的 Podman 容器
+  - 查看所有的容器
+    - ~podman ps -a~
+  - 停止容器 (<name> 用上述命令获取)
+    - ~podman stop <name>~
+  - 删除容器
+    - ~podman rm <name>~
+
+- 运行成功后进入 Podman 容器进行操作
+  - 进入容器 (名字为 pgsql )
+    - ~podman exec -it pgsql bash~
+  - 在容器内连接到 PostgreSQL 数据库 (容器自带客户端)
+    - ~psql -U <your-username> -d <your-database>~
+
+** III. 使用 SSH 隧道连接远程 PostgreSQL 数据库
+
+如果需要在本地通过 ~psql~ 或 DBeaver 等工具连接远程容器内的数据库，可以通过 SSH 建立端口转发隧道。
+
+*** 1. 建立 SSH 隧道
+
+请将以下命令中的占位符 ~<...>~ 替换为实际值：
+
+- ~<server-port>~ : 云服务器上的 PostgreSQL 监听端口，通常为 ~5432~ 。
+- ~<local-port>~ : 本地映射端口，若本机已启用 PostgreSQL，建议使用 ~5433~ 等非默认端口。
+- ~<your-server-ip>~ : 云服务器的公网 IP 地址。
+
+#+begin_src shell
+  ssh -L <local-port>:localhost:<server-port> ecs-user@<your-server-ip>
+#+end_src
+
+- 请 *不要关闭该 SSH 会话终端!* ，它用于维持本地与云端的连接。
+- 不建议在该终端中进行其他操作，以免干扰隧道连接。
+
+*** 2. 在另一个本地终端连接远程数据库 *不要在上面的终端里进行下方的操作!*
+
+使用如下命令连接远程 PostgreSQL：
+
+- ~<local-port>~ : 第1步中设置的端口
+- ~<your-username>~ ：之前容器中设定的数据库用户名。
+- ~<your-database>~ ：之前容器中设定的数据库名称。
+
+#+begin_src shell
+  psql -h localhost -p <local-port> -U <your-username> -d <your-database>
+#+end_src
+
+*** 3. 使用图形化工具连接
+
+你也可以使用 DBeaver 等图形客户端，连接配置如下：
+
+- Host: ~localhost~
+- Port: ~<local-port>~
+- Username: ~<your-username>~
+- Password: ~<your-password>~
+- Database: ~<your-database>~
