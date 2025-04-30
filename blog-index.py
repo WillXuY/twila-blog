@@ -25,7 +25,6 @@ def get_posts():
     page = int(request.args.get("page", 1))
     limit = 5
     offset = (page - 1) * limit
-
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute("SELECT id, title, LEFT(content, 100) FROM posts ORDER BY id DESC LIMIT %s OFFSET %s", (limit, offset))

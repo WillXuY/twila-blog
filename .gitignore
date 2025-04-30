@@ -1,6 +1,8 @@
 .env
 .env.*
 
+.mypy_cache
+
 flask.log
 __pycache__/
 .idea/

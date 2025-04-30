@@ -1,0 +1,16 @@
+# 忽略环境变量
+.env
+.env.*
+
+# 忽略 Python 缓存和开发工具目录
+__pycache__/
+*.py[cod]
+.mypy_cache/
+.idea/
+.vscode/
+*.log
+
+# 忽略 Git 仓库和测试脚本（如果不需要进镜像）
+.git/
+.gitignore
+tests/
