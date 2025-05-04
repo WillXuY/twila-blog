@@ -46,7 +46,7 @@
 
 [[file:./podman_postgresql_selinux.sh]]
 
-*** 2. Podman 常用操作
+*** 5. Podman 常用操作
 
 *注意* : 如果是 sudo 运行的 podman， 下面的命令中请自行加上 sudo
 
@@ -63,6 +63,12 @@
     - ~podman exec -it pgsql bash~
   - 在容器内连接到 PostgreSQL 数据库 (容器自带客户端)
     - ~psql -U <your-username> -d <your-database>~
+
+*** 6. 登陆 podman pgsql 后在内部运行 sql
+
+*注意，复制整段sql进终端后，记得修改里面的密码*
+
+file:./init_database.sql
 
 ** III. 使用 SSH 隧道连接远程 PostgreSQL 数据库
 
