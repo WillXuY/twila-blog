@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# 与 ollama 协作需要创建一个公共网络
-podman network create twila_network
-
 # 启动 Ollama 容器，并配置以下参数：
 # 1. 移除了 GPU 加速，云服务器没有 GPU，因此不需要设备挂载
 #    --device nvidia.com/gpu=all
@@ -18,7 +15,7 @@ podman run -d \
 	--replace \
 	--restart=always \
 	-v ollama:/root/.ollama:Z \
-        --network twila_network \
+        -p 11434:11434 \
 	docker.io/ollama/ollama
 
 # 查看 podman 里 ollama 的运行情况, STATUS 应该为 Up
