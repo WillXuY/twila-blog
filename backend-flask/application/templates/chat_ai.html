@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Twila Chat</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/chat_ai.css') }}">
+
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='images/twila_logo.svg') }}">
+</head>
+<body>
+    <div id="chat"></div>
+
+    <div id="input-area">
+        <input type="text" id="userInput" placeholder="Type a message..." />
+        <button id="sendBtn" onclick="sendMessage()">Send</button>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/chat_ai.js') }}"></script>
+
+</body>
+</html>

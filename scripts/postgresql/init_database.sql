@@ -18,23 +18,28 @@ CREATE DATABASE twila_blog
   LC_CTYPE = 'en_US.UTF-8'
   TEMPLATE template0;
 
--- II. 授权
--- 1. 授予程序用户访问数据库权限
--- 2. 授予 public schema 使用权限
--- 3. 授权现有对象（仅限已有的）
--- 4. 设置未来默认权限（由 twila_admin 创建的表/序列，自动授权给 twila_app）
-
+-- II. 切换用户到 twila_blog 数据库来继续授权操作
 \connect twila_blog
 
 GRANT CONNECT ON DATABASE twila_blog TO twila_app;
 
-GRANT USAGE ON SCHEMA public TO twila_app;
+-- III. 创建 schema
 
-GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO twila_app;
-GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO twila_app;
+CREATE SCHEMA IF NOT EXISTS twila_app;
 
-ALTER DEFAULT PRIVILEGES FOR USER twila_admin IN SCHEMA public
+-- 授权给 twila_admin（DBA 用户）：可以在该 schema 中创建、管理表和序列
+GRANT CREATE, USAGE ON SCHEMA twila_app TO twila_admin;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA twila_app TO twila_admin;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA twila_app TO twila_admin;
+
+-- 授权给 twila_app（程序用户）：只做增删改查，不创建表/序列
+GRANT USAGE ON SCHEMA twila_app TO twila_app;
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA twila_app TO twila_app;
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA twila_app TO twila_app;
+
+ALTER DEFAULT PRIVILEGES FOR USER twila_admin IN SCHEMA twila_app
   GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO twila_app;
-
-ALTER DEFAULT PRIVILEGES FOR USER twila_admin IN SCHEMA public
+ALTER DEFAULT PRIVILEGES FOR USER twila_admin IN SCHEMA twila_app
   GRANT USAGE, SELECT ON SEQUENCES TO twila_app;
+
+ALTER ROLE twila_app SET search_path = twila_app;

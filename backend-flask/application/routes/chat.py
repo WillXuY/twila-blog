@@ -1,17 +1,12 @@
-from flask import Flask, request, Response, render_template, stream_with_context
-import requests
-import json
+from flask import Blueprint, request, Response, stream_with_context
+import requests, json
 
-app = Flask(__name__)
+chat_bp = Blueprint('chat', __name__)
 
 # 这里采用了内部网络调用，不能使用 localhost
-OLLAMA_API_URL = "http://ollama:11434/api/chat"
+OLLAMA_API_URL = "http://localhost:11434/api/chat"
 
-@app.route('/')
-def index():
-    return render_template('chat_ai.html')
-
-@app.route('/chat', methods=['POST'])
+@chat_bp.route('', methods=['POST'])
 def chat():
     user_message = request.json.get('message', '')
 
@@ -34,6 +29,3 @@ def chat():
                         yield f"[Error parsing]: {e}"
 
     return Response(stream_with_context(generate()), content_type='text/plain')
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=False)
