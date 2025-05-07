@@ -3,6 +3,7 @@
 CREATE TABLE twila_app.conversations (
     id UUID PRIMARY KEY,
     title TEXT DEFAULT 'New Chat',
+    user_id UUID NOT NULL,
     created_at TIMESTAMPTZ DEFAULT now(),
     updated_at TIMESTAMPTZ DEFAULT now()
 );
