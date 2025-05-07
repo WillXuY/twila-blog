@@ -1,6 +1,7 @@
 # 忽略环境变量
 .env
 .env.*
+*.gpg
 
 # 忽略 Python 缓存和开发工具目录
 __pycache__/

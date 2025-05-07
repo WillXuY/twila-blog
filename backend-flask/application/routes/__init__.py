@@ -1,4 +1,6 @@
 from .main import main_bp  # 只导入蓝图
 from .chat import chat_bp
+from .conversations import conversations_bp
+from .messages import messages_bp
 
-__all__ = ['main_bp', 'chat_bp']  # 可选，控制从该模块 import * 时暴露的接口
+__all__ = ['main_bp', 'chat_bp', 'conversations_bp', 'message_bp']

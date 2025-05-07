@@ -1,22 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
     <title>Twila Chat</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/chat_ai.css') }}">
+    <style>
+      html, body { height: 100%; margin: 0; font-family: sans-serif; display: flex; flex-direction: column; }
+
+#topbar { display: flex; justify-content: space-between; align-items: center; padding: 0 10px; background-color: #ffffff; border-bottom: 1px solid #ccc; height: 50px; }
+
+/* 左侧按钮（侧边栏） */
+#sidebar-toggle, #new-chat, #dropdown-arrow {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+#sidebar-toggle:hover, #new-chat:hover, #dropdown-arrow:hover { background-color: #eee; }
+
+/* 中间品牌区域居中 */
+#brand { display: flex; align-items: center; gap: 6px; }
+
+/* Logo 图标 */
+#brand .logo { height: 28px; }
+
+/* 标题文字 */
+#brand .title { font-size: 18px; font-weight: bold; color: #333; }
+
+      #chat { flex: 1; padding: 10px; overflow-y: auto; background-color: #f4f4f4; white-space: pre-wrap; }
+      #input-area { display: flex; padding: 10px; background-color: #fff; border-top: 1px solid #ccc; }
+      #userInput { flex: 1; padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 5px; margin-right: 10px;}
+      #sendBtn { padding: 10px 20px; font-size: 16px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+      #sendBtn:active { background-color: #0056b3; }
+
+/* 侧边栏样式 */
+#sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 280px;
+  height: 100%;
+  background-color: #fff;
+  border-right: 1px solid #ccc;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+}
+
+#sidebar.hidden {
+  display: none;
+}
+
+#sidebar-topbar {
+  display: flex;
+  align-items: center;
+  height: 50px;
+  padding: 0 10px;
+  border-bottom: 1px solid #ccc;
+  background-color: #f9f9f9;
+}
+
+#sidebar-close {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: 20px;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+#sidebar-close:hover {
+  background-color: #eee;
+}
+
+.sidebar-title {
+  margin-left: 10px;
+  font-weight: bold;
+}
+
+#sidebar-content {
+  padding: 10px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+    </style>
 
     <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='images/twila_logo.svg') }}">
-</head>
-<body>
+  </head>
+  <body data-server-user-id="{{ server_user_id }}">
+    <div id="topbar">
+
+      <div id="sidebar-toggle" title="Toggle Sidebar">&#9776;</div>
+
+      <div id="brand">
+        <img src="{{ url_for('static', filename='images/twila_logo.svg') }}" alt="Twila Logo" class="logo">
+        <span class="title">Twila Chat</span>
+        <div id="dropdown-arrow" title="More Options">▾</div>
+      </div>
+
+      <div id="new-chat" title="New Chat">＋</div>
+
+    </div>
+
     <div id="chat"></div>
 
     <div id="input-area">
-        <input type="text" id="userInput" placeholder="Type a message..." />
-        <button id="sendBtn" onclick="sendMessage()">Send</button>
+      <input type="text" id="userInput" placeholder="Type a message..." />
+      <button id="sendBtn" onclick="sendMessage()">Send</button>
     </div>
+
+<!-- 侧边栏 -->
+<div id="sidebar" class="hidden">
+  <div id="sidebar-topbar">
+    <div id="sidebar-close" title="Close Sidebar">&#10005;</div>
+    <span class="sidebar-title">Chat History</span>
+  </div>
+  <div id="sidebar-content">
+    <!-- 聊天记录列表将被插入这里 -->
+  </div>
+</div>
 
     <script src="{{ url_for('static', filename='js/chat_ai.js') }}"></script>
 
-</body>
+  </body>
+
 </html>
