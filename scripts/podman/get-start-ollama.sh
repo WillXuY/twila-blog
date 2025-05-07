@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# 创建一个公共网络
+podman network create twila-network
+
 # 启动 Ollama 容器，并配置以下参数：
 # 1. 移除了 GPU 加速，云服务器没有 GPU，因此不需要设备挂载
 #    --device nvidia.com/gpu=all
@@ -15,7 +18,7 @@ podman run -d \
 	--replace \
 	--restart=always \
 	-v ollama:/root/.ollama:Z \
-        -p 11434:11434 \
+        --network twila-network \
 	docker.io/ollama/ollama
 
 # 查看 podman 里 ollama 的运行情况, STATUS 应该为 Up
@@ -27,13 +30,5 @@ podman exec -it ollama ollama pull qwen2.5:0.5b
 # 查看下载了那些 podman ollama 模型
 podman exec -it ollama ollama list
 
-# 运行模型
-# 命令行测试接口调用大语言模型
-curl http://localhost:11434/api/generate -d '{
-    "model": "qwen2.5:0.5b",
-    "prompt": "写一个 Python 的 Hello world 代码",
-    "stream": false
-}'
-# 或者 podman 启动与模型的一段对话
-#$ podman exec -it ollama ollama run qwen2.5:0.5b
-
+# podman 启动与模型的一段对话
+podman exec -it ollama ollama run qwen2.5:0.5b

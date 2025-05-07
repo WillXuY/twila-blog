@@ -78,7 +78,7 @@ else
     -e POSTGRESQL_DATABASE="$POSTGRESQL_DB" \
     -v "${PGDATA_DIR}:/var/lib/pgsql/data:Z" \
     --restart unless-stopped \
-    -p 5432:5432 \
+    --network twila-network \
     "$PG_IMAGE"
 fi
 
@@ -88,7 +88,8 @@ unset POSTGRESQL_USER POSTGRESQL_PASSWORD POSTGRESQL_DB
 CONF="$PGDATA_DIR/postgresql.conf"
 # 先删除所有 password_encryption 行，再追加一行
 echo "🔧 清理旧的 password_encryption 并追加 SCRAM"
-sudo sed -i '/^password_encryption/d' "$CONF"
+# 这一段首次运行会报错，先注释掉
+#$ sudo sed -i '/^password_encryption/d' "$CONF"
 echo "password_encryption = 'scram-sha-256'" | sudo tee -a "$CONF" >/dev/null
 
 echo "🔁 重启容器以加载新配置"
