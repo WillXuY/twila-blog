@@ -1,20 +1,12 @@
 import os
-import subprocess
-from io import StringIO
 from dotenv import dotenv_values
 
 class Config:
     @staticmethod
     def load_secrets():
-        env_gpg_path = os.path.join(os.path.dirname(__file__), ".env.gpg")
-        try:
-            decrypted = subprocess.check_output(
-                ["gpg", "--quiet", "--decrypt", env_gpg_path],
-                text=True
-            )
-            return dotenv_values(stream=StringIO(decrypted))
-        except subprocess.CalledProcessError as e:
-            raise RuntimeError(f"Failed to decrypt .env.gpg: {e}") from e
+        env_path = os.path.join(os.path.dirname(__file__), ".env")
+        # 直接加载 .env 文件内容
+        return dotenv_values(env_path)
 
     secrets = load_secrets.__func__()  # 类加载时调用一次
 

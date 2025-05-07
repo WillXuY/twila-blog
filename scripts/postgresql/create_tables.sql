@@ -1,4 +1,6 @@
 -- 使用 twila_admin 用户来操作
+-- $ sudo podman exec -it pgsql psql -U postgres
+-- 在数据库中操作： \c twila_blog twila_admin
 
 CREATE TABLE twila_app.conversations (
     id UUID PRIMARY KEY,
