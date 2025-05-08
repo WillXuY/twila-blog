@@ -1,7 +1,9 @@
 #!/bin/bash
 
 # 创建一个公共网络
-podman network create twila-network
+if ! podman network exists twila-network; then
+  podman network create twila-network
+fi
 
 # 启动 Ollama 容器，并配置以下参数：
 # 1. 移除了 GPU 加速，云服务器没有 GPU，因此不需要设备挂载
