@@ -3,10 +3,11 @@ set -euo pipefail
 trap 'unset POSTGRES_USER POSTGRES_PASSWORD POSTGRES_DB' EXIT
 
 #—— 基础配置 ——#
+# 手动下载一个 docker hub 的 postgres 然后上传到 quay
 : "${XDG_DATA_HOME:=$HOME/.local/share}"
 : "${PGDATA_DIR:=$XDG_DATA_HOME/containers/postgres/data}"
 : "${PG_CONTAINER_NAME:=pgsql}"
-: "${PG_IMAGE:=docker.io/library/postgres:latest}"
+: "${PG_IMAGE:=quay.io/willxuy/postgres:latest}"
 : "${ENV_FILE_ENC:=.env.gpg}"
 
 echo "🚀 启动 PostgreSQL 容器..."
