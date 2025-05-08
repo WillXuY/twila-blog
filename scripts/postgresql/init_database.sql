@@ -22,7 +22,7 @@ CREATE DATABASE twila_blog
   TEMPLATE template0;
 
 -- II. 切换用户到 twila_blog 数据库来继续授权操作
-\connect twila_blog
+\c twila_blog
 
 GRANT CONNECT ON DATABASE twila_blog TO twila_app;
 
