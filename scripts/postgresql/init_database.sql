@@ -4,7 +4,7 @@
 -- 3. 创建数据库并设置 owner 为 DBA
 
 -- 先使用 podman 连接数据库
--- $ sudo podman exec -it pgsql psql -U postgres
+-- $ podman exec -it pgsql psql -U postgres
 
 CREATE USER twila_admin WITH
   LOGIN
