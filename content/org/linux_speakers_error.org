@@ -1,0 +1,104 @@
+#+TITLE: Realtek ALC294 在 Debian 无声问题解决记录
+#+AUTHOR: Will Xu
+#+DATE: 2025-05-14
+#+OPTIONS: toc:nil
+
+* 背景说明
+
+在 Debian Bookworm（内核 6.1.0-34-amd64）下，笔记本内置的 Realtek ALC294 音频芯片未能自动识别，系统无音频输出。
+
+* 问题表现
+
+- 安装最新版 ~firmware-realtek~ 后仍无声音。
+- PulseAudio / PipeWire 无法识别任何输出设备。
+- ~/etc/modprobe.d~ 中无相关 ALSA 配置文件。
+
+* 硬件信息确认（在 Windows 下）
+
+设备路径：
+: HDAUDIO\FUNC_01&VEN_10EC&DEV_0294&SUBSYS_10431F21&REV_1000
+
+芯片型号：
+: Realtek ALC294
+
+* 解决方法
+
+*告知 Linux 内核模块使用针对特定机型的初始化参数列表*
+
+1. *编辑 modprobe 配置文件* ：
+
+创建或编辑如下文件：
+
+#+BEGIN_SRC shell
+sudo nano /etc/modprobe.d/alsa-base.conf
+#+END_SRC
+
+添加以下内容：
+
+#+BEGIN_SRC conf
+options snd_hda_intel model=asus-zenbook
+#+END_SRC
+
+2. *更新 initramfs（可选但推荐）* ：
+
+#+BEGIN_SRC shell
+sudo update-initramfs -u
+#+END_SRC
+
+3. *重启系统* ：
+
+#+BEGIN_SRC shell
+sudo reboot
+#+END_SRC
+
+4. *验证* ：
+
+使用以下命令确认声卡已启用：
+
+#+BEGIN_SRC shell
+aplay -l
+#+END_SRC
+
+或检查 GUI 声音设置中是否有输出设备。
+
+* 说明
+
+- ~model=asus-zenbook~ 选项为内核驱动 ~snd_hda_intel~ 提供了适配参数，解决 ASUS 特有 BIOS/ACPI 配置下音频无法初始化的问题。
+- 此方法适用于部分华硕笔记本机型中使用的 Realtek ALC2xx 系列芯片。
+
+* 当前系统信息备份
+
+- Debian 12 Bookworm
+- 内核版本: 6.1.0-34-amd64
+- BIOS/UEFI 设置未调整
+- 已安装 ~firmware-realtek~ 版本：20230210-5
+
+* 问题总结
+
+1. ACPI 或 BIOS 提供的硬件布局信息不标准
+  - 很多笔记本（尤其是 ASUS）在 BIOS 提供给操作系统的 ACPI 描述中，音频设备的 布局 ID 不符合内核的自动匹配标准，或者缺少必要的 pin 配置信息。
+  - model=asus-zenbook 强制 snd_hda_intel 使用一个“预设好的 pin 映射表”，绕过 BIOS 给出的错误或不兼容信息。
+
+2. Realtek ALC294 在某些主板上的实现有非标准的 codec 配置
+  - ALC294 在不同主板（尤其是 OEM 特制的 ASUS 机型）上可能启用了定制功能（如内建功放、数字麦克风、静音控制引脚），Linux 默认策略无法探测这些。
+
+* 为什么所有发行版都没有默认解决？
+1. 内核模块 snd_hda_intel 的默认行为是“自动匹配”
+  - 该驱动尝试根据 DMI、ACPI 信息推断出正确的 codec layout，但在厂商信息不完善或主板设计定制化严重时容易失败。
+  - Linux 维护者不敢贸然默认加 model=asus-zenbook，否则会误伤其它机型。
+
+2. Linux 社区对“机型硬编码”一直很保守
+  - 硬编码型号只在用户显式指定时才启用，否则会造成不可预期的问题（如扬声器不响，耳机无法识别等）。
+  - 这也促使用户报告 bug，而不是让错误永远隐藏。
+
+3. 厂商未与内核社区充分合作
+  - ASUS（和其他厂商）大多不提供公开的 codec 配置文档或 ACPI 信息，导致社区需要逆向或者依赖用户反馈。
+  - 相比之下，Windows 有专有驱动绕开 BIOS 限制，Linux 则只能用“通用驱动 + 机型配置”的方式处理。
+
+* 附录：相关命令
+
+#+BEGIN_SRC shell
+lspci | grep -i audio
+sudo dmesg | grep -i snd
+cat /proc/asound/cards
+#+END_SRC
