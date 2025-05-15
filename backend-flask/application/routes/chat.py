@@ -17,7 +17,7 @@ if not logger.handlers:
 
 OLLAMA_API_URL = "http://ollama:11434/api/chat"
 
-def handle_message(user_id, conversation_id, user_message, model="qwen2.5:0.5b"):
+def handle_message(user_id, conversation_id, user_message):
     logger.debug(f"handle_message called with user_id={user_id}, conversation_id={conversation_id}, message={user_message}")
     # 校验 user_id
     try:
@@ -52,6 +52,7 @@ def handle_message(user_id, conversation_id, user_message, model="qwen2.5:0.5b")
     logger.debug(f"Inserted user message id={user_msg.id}")
 
     # 3) 构造 AI 请求
+    model="qwen2.5:0.5b"
     payload = {
         "model": model,
         "stream": True,

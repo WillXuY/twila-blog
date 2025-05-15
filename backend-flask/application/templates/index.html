@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Twila</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .carousel-item {
+      transition: opacity 0.5s ease-in-out;
+      touch-action: none;
+    }
+  </style>
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='images/twila_logo.svg') }}">
+</head>
+<body class="bg-gradient-to-br from-purple-600 to-orange-400 min-h-screen flex flex-col justify-between text-white">
+
+  <!-- Carousel -->
+  <main class="flex-1 flex flex-col items-center justify-center relative px-4">
+    <div id="carousel" class="relative w-full max-w-3xl h-auto touch-none">
+      <!-- Slide 1 -->
+      <div class="carousel-item absolute inset-0 opacity-100" data-index="0">
+        <div class="flex flex-col items-center justify-center text-center h-full">
+          <h1 class="text-4xl sm:text-5xl font-bold mb-4">Twila</h1>
+          <p class="text-lg sm:text-xl leading-relaxed">
+            TWILA Whispers Ideas Lyrically &amp; Aesthetically.<br>
+            黄昏女孩如诗般唯美地低语着灵感。
+          </p>
+        </div>
+      </div>
+
+      <!-- Slide 2 -->
+      <div class="carousel-item absolute inset-0 opacity-0" data-index="1">
+        <div class="flex flex-col items-center justify-center text-center h-full">
+          <h1 class="text-4xl sm:text-5xl font-bold mb-4">Chat AI</h1>
+          <p class="text-lg sm:text-xl leading-relaxed mb-4">
+            无需注册即可直接使用，由通义千问提供基础模型。
+          </p>
+          <a href="/chat" class="underline text-white hover:text-yellow-200 text-base sm:text-lg">
+            立即体验 AI 功能 →
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Indicator Dots -->
+    <div class="absolute top-[80%] left-1/2 transform -translate-x-1/2 flex gap-2">
+      <button class="w-3 h-3 rounded-full bg-white bg-opacity-80" onclick="showSlide(0)"></button>
+      <button class="w-3 h-3 rounded-full bg-white bg-opacity-40" onclick="showSlide(1)"></button>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="text-center text-sm py-4 px-2">
+    ICP 备案号：
+    <a href="https://beian.miit.gov.cn/" target="_blank" class="underline hover:text-yellow-200">
+      浙ICP备2025170710号-1
+    </a>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    const slides = document.querySelectorAll('.carousel-item');
+    const indicators = document.querySelectorAll('button[onclick^="showSlide"]');
+    let current = 0;
+
+    function showSlide(index) {
+      slides.forEach((slide, i) => {
+        slide.style.opacity = i === index ? '1' : '0';
+      });
+      indicators.forEach((dot, i) => {
+        dot.classList.toggle('bg-opacity-80', i === index);
+        dot.classList.toggle('bg-opacity-40', i !== index);
+      });
+      current = index;
+    }
+
+    // 自动轮播
+    setInterval(() => {
+      current = (current + 1) % slides.length;
+      showSlide(current);
+    }, 5000);
+
+    // 支持触控滑动
+    let startX = 0;
+    const carousel = document.getElementById('carousel');
+
+    carousel.addEventListener('touchstart', e => {
+      startX = e.touches[0].clientX;
+    });
+
+    carousel.addEventListener('touchend', e => {
+      const endX = e.changedTouches[0].clientX;
+      const diff = endX - startX;
+      if (Math.abs(diff) > 50) {
+        if (diff < 0) {
+          // 向左滑动
+          showSlide((current + 1) % slides.length);
+        } else {
+          // 向右滑动
+          showSlide((current - 1 + slides.length) % slides.length);
+        }
+      }
+    });
+  </script>
+</body>
+</html>
