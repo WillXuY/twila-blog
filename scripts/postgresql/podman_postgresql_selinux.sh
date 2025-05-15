@@ -61,6 +61,6 @@ else
     -e POSTGRES_PASSWORD="$POSTGRES_PASSWORD" \
     -e POSTGRES_DB="$POSTGRES_DB" \
     -v "$PGDATA_DIR":/var/lib/postgresql/data:Z \
-    -p 5432:5432 \
+    -p 127.0.0.1:5432:5432 \
     "$PG_IMAGE"
 fi

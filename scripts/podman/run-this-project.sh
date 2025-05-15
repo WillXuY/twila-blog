@@ -34,7 +34,7 @@ podman run -d \
   --replace \
   --name "$CONTAINER_NAME" \
   --network "$NETWORK" \
-  -p "$PORT:$PORT" \
+  -p "127.0.0.1:$PORT:$PORT" \
   -e DATABASE_URL \
   -e SECRET_KEY \
   "$IMAGE"
