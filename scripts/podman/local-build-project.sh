@@ -9,7 +9,3 @@ echo "Reading VERSION: $VERSION"
 
 # 版本号需要及时修改
 podman build --build-arg VERSION="$VERSION" -t "$IMAGE_NAME" ../../backend-flask
-
-# push to origin quay io
-podman login quay.io
-podman push "$IMAGE_NAME"

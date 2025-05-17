@@ -1,10 +1,11 @@
 from flask import Flask
 from .models import db
 from application.routes import main_bp, chat_bp, conversations_bp, messages_bp
+from application.config import Config
 
 def create_app():
     app = Flask(__name__)
-    app.config.from_object('application.config.Config')
+    app.config.from_object(Config)
 
     # 初始化模型和 migrate 实现 alembic 自动管理数据库
     db.init_app(app)
