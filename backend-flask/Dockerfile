@@ -4,8 +4,8 @@ FROM quay.io/sclorg/python-311-minimal-el8
 ARG VERSION
 LABEL maintainer="willxuy <will.xu.work@zohomail.com>"
 LABEL version=${VERSION}
-LABEL changelog="${VERSION}: Add history for AI chat."
-LABEL description="A Flask-based blog with AI chat homepage."
+LABEL changelog="${VERSION}: Introduced a new index page with GitHub mascot link."
+LABEL description="Twila update: Added a new landing page featuring a mascot and GitHub repository link."
 
 WORKDIR /app
 
