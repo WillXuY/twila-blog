@@ -2,9 +2,11 @@
 set -euo pipefail
 trap 'unset DATABASE_URL SECRET_KEY' EXIT
 
+VERSION=$(cat ../../backend-flask/VERSION)
+
 # 配置
 : "${CONTAINER_NAME:=twila-blog}"
-: "${IMAGE:=quay.io/willxuy/twila-blog:v0.1.0-build.1-20250507}"
+: "${IMAGE:=quay.io/willxuy/twila-blog:$VERSION}"
 : "${PORT:=5000}"
 : "${NETWORK:=twila-network}"
 

@@ -10,6 +10,12 @@
       transition: opacity 0.5s ease-in-out;
       touch-action: none;
     }
+    @media (max-width: 640px) {
+        #mascot {
+            z-index: 0 !important; /* 让 footer 遮住它 */
+            opacity: 0.8;
+        }
+    }
   </style>
   <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='images/twila_logo.svg') }}">
 </head>
@@ -103,5 +109,15 @@
       }
     });
   </script>
+
+  <a href="https://github.com/WillXuY/twila-blog" target="_blank" rel="noopener">
+    <img
+      src="{{ url_for('static', filename='images/Blue_Lodestar_Github.png') }}"
+      alt="Twila Mascot"
+      id="mascot"
+      class="fixed bottom-[36px] right-4 w-24 sm:w-32 md:w-40 h-auto cursor-pointer z-50"
+    />
+  </a>
+
 </body>
 </html>
