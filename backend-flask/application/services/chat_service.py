@@ -8,13 +8,9 @@ from application.repositories.message_repo import (
 )
 from application.utils.llm_client import stream_response, AIClientError
 
-def handle_chat(user_id_str, conv_id_str, user_message):
-    try:
-        user_id = uuid.UUID(user_id_str)
-    except Exception:
-        return jsonify({"error": "Invalid user_id"}), 400
 
-    conv = get_or_create_conversation(user_id, conv_id_str, user_message)
+def handle_chat(user_id, conv_id, user_message):
+    conv = get_or_create_conversation(user_id, conv_id, user_message)
 
     save_user_message(conv.id, user_message)
 
@@ -35,21 +31,10 @@ def handle_chat(user_id_str, conv_id_str, user_message):
                     headers={"X-Conversation-Id": str(conv.id)})
 
 
-def get_conversations(user_id_str):
-    try:
-        user_id = uuid.UUID(user_id_str)
-    except Exception:
-        return jsonify({"history": []}), 200
-
+def get_conversations(user_id):
     convs = list_recent_conversations(user_id)
     return jsonify({"history": convs})
 
 
-def get_conversation_messages(user_id_str, conv_id_str):
-    try:
-        user_id = uuid.UUID(user_id_str)
-        conv_id = uuid.UUID(conv_id_str)
-    except Exception:
-        return jsonify({"messages": []}), 200
-
+def get_conversation_messages(user_id, conv_id):
     return jsonify({"messages": get_messages_for_conversation(user_id, conv_id)})
