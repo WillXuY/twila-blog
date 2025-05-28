@@ -4,14 +4,17 @@
 *.gpg
 
 # 忽略 Python 缓存和开发工具目录
-__pycache__/
-*.py[cod]
-.mypy_cache/
 .idea/
 .vscode/
+__pycache__/
+.mypy_cache/
+*.pyc
+*.py[cod]
 *.log
 
 # 忽略 Git 仓库和测试脚本（如果不需要进镜像）
 .git/
 .gitignore
 tests/
+
+README.*

@@ -1,5 +1,3 @@
-# application/utils/ai_client.py
-
 import time
 import json
 import logging
@@ -11,7 +9,7 @@ logger = logging.getLogger(__name__)
 class AIClientError(Exception):
     pass
 
-def _post_streaming(endpoint, user_message, timeout_connect=5):
+def _post_streaming(endpoint, user_message, timeout_connect=10):
     """向单个 endpoint 发起 stream=True 的请求，返回 Response 对象"""
     payload = {
         "model": endpoint["model"],
@@ -22,7 +20,7 @@ def _post_streaming(endpoint, user_message, timeout_connect=5):
     r.raise_for_status()
     return r
 
-def stream_response(user_message, connect_timeout=5, idle_timeout=10):
+def stream_response(user_message, connect_timeout=10, idle_timeout=10):
     """
     依次尝试 config 中的每个 Ollama endpoint，
     对流返回进行 idle_timeout 秒的“无数据断开”检测，失败则切下一个模型。
