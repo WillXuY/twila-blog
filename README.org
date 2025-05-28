@@ -1,0 +1,109 @@
+#+TITLE: Twila 项目启动与配置指南
+#+AUTHOR: Will Xu
+
+* TWILA Whispers Ideas Lyrically & Aesthetically.
+黄昏女孩如诗般唯美地低语着灵感。
+
+
+* 目录
+  - [[#项目结构][项目结构]]
+  - [[#环境变量配置][环境变量配置]]
+  - [[#加密环境变量文件][加密环境变量文件]]
+  - [[#启动脚本使用方法][启动脚本使用方法]]
+  - [[#常见问题][常见问题]]
+
+* 项目结构
+#+BEGIN_SRC
+├── backend-flask/           # Flask 项目代码目录
+├── scripts/                 # 启动与管理脚本
+│   └── start_project_optional.py   # 启动项目主脚本
+├── secrets/                 # 放置加密环境变量文件
+│   ├── .env.dev.gpg
+│   ├── .env.prod.gpg
+├── .env.example             # 环境变量模板文件
+├── README.md                # 本说明文档
+#+END_SRC
+
+* 环境变量配置
+
+** .env.example
+项目根目录下有 ~.env.example~ 文件，示例内容如下：
+
+#+BEGIN_SRC bash
+POSTGRESQL_USER=postgres
+POSTGRESQL_PASSWORD=dev.secret
+POSTGRESQL_DB=postgres
+
+# 开发环境中 Flask 连接数据库地址
+DATABASE_URL=postgresql://twila_app:pw.@localhost:5432/twila_blog
+
+# 容器内运行 Flask 时连接数据库地址
+DATABASE_URL=postgresql://twila_app:pw.@pgsql:5432/twila_blog
+
+SECRET_KEY=your-secret-key
+#+END_SRC
+
+请根据实际情况修改密码、用户名等敏感信息后，使用 GPG 加密(详见下一节)。
+
+* 加密环境变量文件
+
+为了保护敏感信息，环境变量文件需加密后放入 ~secrets/~ 目录。
+
+示例使用 GPG 对 ~.env.dev~ 和 ~.env.prod~ 进行加密：
+
+#+BEGIN_SRC bash
+gpg --output secrets/.env.dev.gpg --encrypt --recipient your-email@example.com .env.dev
+gpg --output secrets/.env.prod.gpg --encrypt --recipient your-email@example.com .env.prod
+#+END_SRC
+
+#+NOTE:
+  - 运行环境需配置对应私钥以解密。
+  - 不要将明文 ~.env~ 文件提交到代码仓库。
+
+* 启动脚本使用方法
+
+** 安装依赖
+
+确保本机安装了以下软件：
+
+- Python 3.11+
+- Podman
+- GPG
+
+** 设置环境变量
+
+根据需要，选择运行环境(dev 或 prod)，确保对应加密环境变量文件存在于 ~secrets/~ 目录。
+
+| 区别         | dev (开发模式)                            | prod (生产模式)                      |
+|--------------+-------------------------------------------+--------------------------------------|
+| 运行方式     | 使用本机 Python 虚拟环境(~/.virtualenvs)  | 使用 Podman 容器化运行               |
+| 启动脚本     | scripts/start_project_optional.py         | 同上，自动选择容器运行逻辑           |
+| 网络调用     | Flask 通过 localhost 访问 Ollama 和 PgSQL | Flask 通过容器名访问其他服务         |
+| 数据库地址   | ~localhost~ (来自 .env.dev)                 | ~pgsql~ (来自 .env.prod)               |
+| Ollama 地址  | ~localhost~ (本机运行 Ollama 容器)          | ~ollama~ (容器内部访问)                |
+| 环境变量文件 | ~.env.dev.gpg~ (位于 secrets 目录)          | ~.env.prod.gpg~ (位于 secrets)         |
+| 网络配置     | 不使用 Podman 网络                        | 使用 Podman 自定义网络 ~twila-network~ |
+| 构建镜像     | 无需构建                                  | 使用版本号 ~quay.io/...:tag~           |
+
+** 启动项目
+
+运行主启动脚本：
+
+#+BEGIN_SRC bash
+cd scripts/
+python3 start_project_optional.py --env prod
+#+END_SRC
+
+- 不指定参数时默认使用 ~prod~ 环境。
+- 脚本会自动解密对应的环境变量文件，启动 PostgreSQL 和 Flask 容器。
+- Flask 应用容器会映射到 ~127.0.0.1:5000~ (可在配置文件中修改端口)。
+
+* 常见问题
+
+** 容器无法启动或镜像拉取失败
+
+确认镜像仓库中是否存在对应版本的镜像，网络是否正常。
+
+** GPG 解密失败
+
+确认本机配置了对应的 GPG 私钥，并能正常解密 ~.gpg~ 文件。
