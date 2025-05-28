@@ -1,0 +1,38 @@
+* Twila AI Chat Backend
+
+一个企业级结构的 Flask 后端，用于支持 AI 聊天页面，支持多会话管理、消息存储、LLM 接入等功能。
+
+** 🧠 技术栈
+
+- Python 3.11+
+- Flask
+- SQLAlchemy
+- UUID 作为用户和会话标识
+- LLM 接入（Ollama / 本地模型）
+- Docker 支持
+- 前后端分离（使用静态 JS 文件）
+
+** 📂 项目结构
+
+#+BEGIN_SRC text
+backend-flask/
+├── application/
+│   ├── controllers/           # 路由控制器（chat、main 页面）
+│   ├── services/              # 业务逻辑层
+│   ├── repositories/          # 数据访问层
+│   ├── models/                # 数据模型（SQLAlchemy ORM）
+│   ├── errors/                # 全局异常处理
+│   ├── utils/                 # 工具模块（LLM、预热等）
+│   ├── static/                # 前端静态资源（css/js/images）
+│   ├── templates/             # HTML 模板文件
+│   ├── config.py              # 配置文件
+│   ├── extensions.py          # 第三方扩展初始化
+│   └── __init__.py            # Flask 应用初始化
+├── wsgi.py                    # 应用入口（供 gunicorn 等使用）
+├── Dockerfile                 # Docker 构建文件
+├── .containerignore           # 构建镜像时忽略规则
+├── requirements.txt           # 项目依赖清单
+├── VERSION                    # 项目版本号标识
+├── mypy.ini                   # 类型检查配置
+└── README.md                  # 项目说明（当前文件）
+#+END_SRC
