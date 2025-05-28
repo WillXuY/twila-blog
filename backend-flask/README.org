@@ -2,17 +2,7 @@
 
 一个企业级结构的 Flask 后端，用于支持 AI 聊天页面，支持多会话管理、消息存储、LLM 接入等功能。
 
-** 🧠 技术栈
-
-- Python 3.11+
-- Flask
-- SQLAlchemy
-- UUID 作为用户和会话标识
-- LLM 接入（Ollama / 本地模型）
-- Docker 支持
-- 前后端分离（使用静态 JS 文件）
-
-** 📂 项目结构
+** 项目结构
 
 #+BEGIN_SRC text
 backend-flask/
@@ -35,4 +25,40 @@ backend-flask/
 ├── VERSION                    # 项目版本号标识
 ├── mypy.ini                   # 类型检查配置
 └── README.md                  # 项目说明（当前文件）
+#+END_SRC
+
+** 项目运行
+
+*** 软件准备
+
+**** Debian GNU/Linux + Emacs + python-lsp
+
+#+BEGIN_SRC bash
+
+# 安装基本 pip, venv 模块
+sudo apt install python3-pip python3-venv
+
+# 配置国内 pip 镜像, 参考 https://mirror.tuna.tsinghua.edu.cn/help/pypi/
+mkdir -p ~/.config/pip
+# 使用国内镜像
+cat > ~/.config/pip/pip.conf <<EOF
+[global]
+index-url = https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple
+EOF
+
+# 在 home 目录中新建虚拟环境文件夹
+mkdir -p ~/.virtualenvs/twila-blog/
+cd ~/.virtualenvs/
+# 初始化虚拟环境,并进入
+python3 -m venv twila-blog
+source twila-blog/bin/activate
+# 这个命令在虚拟环境中运行,安装项目所需依赖
+pip install -r /path/to/project/requirements.txt
+
+# 以下内容为 Emacs 配置 python-lsp, 继续在虚拟环境中操作
+pip install 'python-lsp-server[all]'
+
+# 配置 emacs 参考, 搜索内容: ;; 配置 pylsp 给 eglot
+# https://github.com/WillXuY/will_xu_config/blob/main/.emacs.d/lisp/init-local.el
+
 #+END_SRC
