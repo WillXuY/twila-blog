@@ -1,8 +1,8 @@
-import threading
-from flask import Blueprint, render_template, request, current_app
 import uuid
 
-from application.utils.model_preheat import preheat_ollama_models
+from flask import Blueprint, render_template, current_app
+
+from application.services.main_service import start_ollama_preheat
 
 main_bp = Blueprint('main', __name__)
 
@@ -12,7 +12,7 @@ def home():
     # current_app 是一个代理，需要在请求上下文里使用
     app = current_app._get_current_object()
     # 用线程启动预热，不阻塞当前请求
-    threading.Thread(target=preheat_ollama_models, args=(app,), daemon=True).start()
+    start_ollama_preheat(app)
     return render_template('index.html')
 
 # Chat 页面：chat_ai.html

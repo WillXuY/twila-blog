@@ -1,0 +1,19 @@
+* TWILA Whispers Ideas Lyrically & Aesthetically.
+黄昏女孩如诗般唯美地低语着灵感。
+
+** 包含模块：
+
+- 🧠 *后端服务* (Flask)位于 ~backend-flask/~
+- 📄 *博客内容* (Org-mode 管理)位于 ~content/org/~
+- 🔧 *脚本工具* 用于部署和同步，位于 ~scripts/~
+
+** 项目结构
+
+#+BEGIN_SRC text
+twila-blog/
+├── backend-flask/     # 后端 Flask 项目，处理聊天与内容 API
+├── content/org/       # 使用 org 文件管理的博客文章
+├── scripts/           # 部署 / 数据同步脚本
+├── README.md          # 当前文件
+└── LICENSE
+#+END_SRC

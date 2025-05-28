@@ -1,5 +1,3 @@
-# application/utils/model_preheat.py
-
 import requests
 import logging
 
