@@ -1,7 +1,10 @@
 # 这个镜像基于 RHEL8
 FROM quay.io/sclorg/python-311-minimal-el8
 
-ARG VERSION
+ARG VERSION=dev
+ARG BUILD_DATE
+ARG COMMIT_SHA
+
 LABEL maintainer="willxuy <will.xu.work@zohomail.com>"
 LABEL version=${VERSION}
 LABEL changelog="${VERSION}: Introduced a new index page with GitHub mascot link."

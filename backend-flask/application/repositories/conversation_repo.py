@@ -1,10 +1,11 @@
 from application.models.conversations import Conversation
 from application.extensions import db
 
-def get_or_create_conversation(user_id, conv_id_str, title_hint):
-    if conv_id_str:
+
+def get_or_create_conversation(user_id, conv_id, title_hint):
+    if conv_id:
         try:
-            conv = Conversation.query.get(conv_id_str)
+            conv = Conversation.query.get(conv_id)
             if conv and conv.user_id == user_id:
                 return conv
         except Exception:
