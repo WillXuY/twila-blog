@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e  # 一旦出错就退出
+set -e
 
 ENV_NAME=twila-blog
 VENV_PATH="$HOME/.virtualenvs/$ENV_NAME"
@@ -13,8 +13,8 @@ echo "激活虚拟环境..."
 source "$VENV_PATH/bin/activate"
 
 # 安装依赖（可选）
-# pip install -r ../backend-flask/requirements.txt
+# pip install -r ../../backend-flask/requirements.txt
 
+cd "$(dirname "$0")/../../backend-flask"
 echo "启动 Flask 开发服务..."
-cd ../backend-flask
 python3 wsgi.py
