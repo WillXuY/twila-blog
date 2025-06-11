@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euo pipefail
+
 # 启动 Ollama 容器，并配置以下参数：
 # 1. 移除了 GPU 加速，云服务器没有 GPU，因此不需要设备挂载
 #    --device nvidia.com/gpu=all
@@ -11,6 +13,7 @@
 #    --network twila_network 代替 -p
 # 7. docker.io/ollama/ollama 使用官方的 Ollama 镜像（如果本地没有镜像，将从 Docker Hub 自动拉取）
 podman run -d $NETWORK_ARG \
+        --replace \
 	--name ollama \
 	--replace \
 	--restart=always \
