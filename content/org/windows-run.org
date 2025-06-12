@@ -1,0 +1,45 @@
+#+TITLE: Twila 项目 Windows 下的启动与配置指南
+#+AUTHOR: Will Xu
+
+* 软件准备
+
+** Ollama
+
+*** 1. 从官网 https://ollama.com/ 下载并安装 ollama
+
+*** 2. 在 cmd 中运行 ollama 下载并运行大模型
+
+首先按下 <super> 键(windows 徽标键),直接输入cmd并回车来启动命令提示符(cmd)
+
+然后输入以下内容来使用 ollama 来下载运行大模型，示例使用最小模型 qwen2.5:0.5b
+
+1. 用命令查看 ollama 是否安装成功 ~ollama --version~ 
+2. 使用 ollama pull 千问2.5的0.5b模型 ~ollama pull qwen2.5:0.5b~
+3. 使用 ollama 启动 qwen2.5:0.5b ~ollama run qwen2.5:0.5b~
+4. 测试在 cmd 出现的交互界面(>>> 开头)中输入任意内容和 ollama 的模型交互
+5. 退出测试，输入 /bye 或者 Ctrl + d.
+
+** PostgreSQL
+
+*** 1. 从官方推荐的地址下载运行安装包, 建议勾选 psql 的命令行工具。
+
+PostgreSQL 官网 https://www.postgresql.org/
+PostgreSQL 官网推荐下载网站 https://www.enterprisedb.com/downloads/postgres-postgresql-downloads
+
+*** 2. 安装完成后使用 *SQL Shell (psql)* 工具来执行初始化脚本
+
+打开后会出现 cmd 窗口并显示内容为 *Server [localhost]:* 
+一直回车默认到出现这一行： *用户 postgres 的口令:* 输入密码后开始操作
+
+1. 使用 postgres 超级账号进行数据库和账户的初始化 scripts/postgresql/init_database.sql
+
+切换到 twila_admin 账号，这个用户的密码写在上面的初始化脚本中
+
+2. 切换到 twila_admin 管理员账户进行表格相关的操作 scripts/postgresql/create_tables.sql
+
+* 运行项目
+
+** 项目入口文件 backend-flask/wsgi.py
+
+- 直接使用 ~python wsgi.py~ 
+- 或者使用 IDE 例如 vscode 右键 wsgi.py 运行

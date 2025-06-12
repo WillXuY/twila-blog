@@ -4,13 +4,33 @@
 * TWILA Whispers Ideas Lyrically & Aesthetically.
 黄昏女孩如诗般唯美地低语着灵感。
 
-
 * 目录
   - [[#项目结构][项目结构]]
   - [[#环境变量配置][环境变量配置]]
   - [[#加密环境变量文件][加密环境变量文件]]
   - [[#启动脚本使用方法][启动脚本使用方法]]
   - [[#常见问题][常见问题]]
+
+* 项目简介
+
+这是一个使用 Flask 框架的 python web 项目, 样例网站： https://twila.top
+
+** 包含功能
+1. 与 ollama 的大语言模型交互 
+2. 使用 postgresql 数据库来保存历史记录
+3. 使用 swagger-ui 来管理 api
+
+* 项目启动
+
+** Windows 下的开发环境，参考文档 ~content/org/windows-run.org~
+
+** Unix-like （以 Debian 为例）系统下开发环境的启动
+
+1. 安装必要软件 Bash, python3, podman
+
+2. 启动脚本 ~python3 start.py~ 选择 dev 模式
+
+** 启动完成后，默认访问 localhost:5000 来查看 web 页面
 
 * 项目结构
 #+BEGIN_SRC
