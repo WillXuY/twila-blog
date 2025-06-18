@@ -4,26 +4,43 @@
 * I - 项目简介
 这是一个基于 Flask 构建的 python web 项目, 目前提供了交互式 AI 对话服务。
 
-在线实例网站: https://twila.top
+在线示例网站: [[https://twila.top][twila.top]]
 
-** 为什么叫 Twila?
+** 1 - 为什么叫 Twila?
 - Twila 是一个递归缩写: =TWILA Whispers Ideas Lyrically & Aesthetically=.
 - 中文含义: 黄昏女孩如诗般唯美地低语着灵感。
 
-** 功能特性
+** 2 - 功能特性
 1. 支持与 Ollama 大语言模型交互。
 2. 使用 PostgreSQL 数据库持久化对话历史。
 3. 提供 Swagger UI 接口文档。
 
 * II - 项目启动指南
-** 1. Windows 下开发环境的 [[file:content/org/windows-run.org][参考文档]]
+** 1 - Windows 下开发环境的 [[file:content/org/windows-run.org][参考文档]]
 
-** 2. Debian / Unix-like 系统开发环境
-1. 安装必要软件 Bash, python3, podman
+** 2 - Debian / Unix-like 系统开发环境
+*** 1. 安装必要软件 Bash, python3, podman
 
-2. 启动脚本 ~python3 start.py~ 选择 dev 模式
+*** 2. 创建并启用 python 虚拟环境
+#+BEGIN_SRC bash
+# 创建文件夹(可自定义路径)
+mkdir -p ~/.virtualenvs/twila-blog
+# 创建虚拟环境
+python3 -m venv ~/.virtualenvs/twila-blog
+# 启用虚拟环境
+source ~/.virtualenvs/twila-blog/bin/activate
+# 切换到项目根目录,包含本文件 README.org, start.py 和 requirements.txt
+cd /path/to/twila-blog
+# 安装必要依赖
+pip install -r requirements.txt
+# (可选) 切换到国内源来加速 pip 下载
+python -m pip install -i https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple --upgrade pip
+pip config set global.index-url https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple
+#+END_SRC
 
-** 3. 启动完成后, 访问 localhost:5000 查看 web 页面
+*** 3. 启动交互式脚本 ~python3 start.py~
+
+** 3 - 启动完成后, 访问 [[localhost:5000][默认页面]]
 
 * III - 项目结构简要说明
 #+BEGIN_SRC

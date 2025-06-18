@@ -23,5 +23,8 @@ podman run -d $NETWORK_ARG \
 # 拉取模型,使用最小的模型
 podman exec -i ollama ollama pull qwen2.5:0.5b
 
+# 可选，其他的更强大的模型
+# podman exec -i ollama ollama pull deepseek-coder:6.7b
+
 # 查看下载了那些 podman ollama 模型
 podman exec -i ollama ollama list
