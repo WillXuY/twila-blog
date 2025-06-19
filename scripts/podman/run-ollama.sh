@@ -15,10 +15,9 @@ set -euo pipefail
 podman run -d $NETWORK_ARG \
         --replace \
 	--name ollama \
-	--replace \
 	--restart=always \
 	-v ollama:/root/.ollama:Z \
-	docker.io/ollama/ollama
+	quay.io/willxuy/ollama
 
 # 拉取模型,使用最小的模型
 podman exec -i ollama ollama pull qwen2.5:0.5b
