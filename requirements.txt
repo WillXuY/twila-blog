@@ -1,1 +1,3 @@
+dotenv
+jinja2
 questionary
