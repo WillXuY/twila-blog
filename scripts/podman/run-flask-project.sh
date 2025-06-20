@@ -12,9 +12,6 @@ set -euo pipefail
   exit 1
 }
 
-# 自动创建网络（更健壮）
-podman network exists "$NETWORK" >/dev/null || podman network create "$NETWORK"
-
 echo "🚀 启动 Flask 容器：$CONTAINER_NAME"
 podman run -d \
   --replace \

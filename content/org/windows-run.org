@@ -1,0 +1,56 @@
+#+TITLE: Twila 项目 Windows 启动与配置指南
+#+AUTHOR: Will Xu
+
+* 系统与硬件要求
+实测表明，Twila 项目可在最低配置为 *2 核 CPU + 2 GB 内存* 的 Rocky Linux 系统上运行。
+Windows 建议配置为 *2 核 CPU + 4 GB 内存* 起步以获得更流畅体验。
+
+* 软件准备
+** I - Python
+通过微软应用商店搜索并安装 ~python~ 。
+
+** II - Git
+从 [[https://git-scm.com/][Git 官网]] 下载并安装。
+
+** III - IDE (以 vscode 为例)
+*** 1. 从 [[https://code.visualstudio.com/][Vscode 官网]] 下载并安装 vscode。
+
+*** 2. 安装完成后推荐安装 ~python~ 相关扩展插件。
+
+** IV - Ollama
+*** 1. 从 [[https://ollama.com/][Ollama 官网]] 下载并安装 ollama。
+
+*** 2. 启动命令提示符(Win 键后输入 ~cmd~ 查找)，并执行以下命令安装与测试 Ollama 模型。
+1. 查看 ollama 是否安装成功: ~ollama --version~ 
+2. 下载模型(以千问2.5轻量模型为例): ~ollama pull qwen2.5:0.5b~
+3. 启动模型: ~ollama run qwen2.5:0.5b~
+4. 测试模型(出现 >>> 提示符后)输入任意内容与模型对话
+5. 退出测试: 输入 /bye 或者按 Ctrl + d.
+
+** V - PostgreSQL
+*** 1. 从官网下载安装包。
+- [[https://www.postgresql.org/][PostgreSQL 官网]]
+- [[https://www.enterprisedb.com/downloads/postgres-postgresql-downloads][PostgreSQL 官方推荐 Windows 安装包下载网站]]
+
+*** 2. 关键安装步骤
+[[../picture/pgsql-extension.jpg]]
+这一步建议勾选 psql 命令行工具，用来运行 SQL。
+[[../picture/pgsql-password.jpg]]
+这里需要输入 postgres 管理员用户的密码，需要记住，用来登陆数据库。
+
+*** 3. 安装完成后搜索并运行 *SQL Shell (psql)* 工具。
+[[../picture/psql-shell.jpg]]
+1. 成功启动 psql 后显示内容应该是: *Server [localhost]:*
+2. 连续回车使用默认配置直到出现这个内容: *用户 postgres 的口令:* 然后输入密码。
+3. 使用超级用户运行: [[file:../../scripts/postgresql/init_database.sql][初始化 SQL]]
+4. 使用命令 ~\c twila_blog twila_admin~ 切换到 twila_admin 普通管理员账户,密码在上一步的 SQL 中。
+5. 以普通管理员用户运行 [[file:../../scripts/postgresql/create_tables.sql][表格创建 SQL]]
+
+* 启动 Twila 项目
+** 启动 [[../../backend-flask/wsgi.py][项目入口文件]]
+启动方式任选其一:
+
+- 命令提示符直接运行 ~python wsgi.py~
+- 使用 vscode 右键选择入口文件 wsgi.py 并运行。
+
+** 项目启动后使用浏览器访问 [[http://localhost:5000][项目默认地址]] 即可查看首页
