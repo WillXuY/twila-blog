@@ -1,0 +1,4 @@
+pytest
+pytest-html
+# 并发测试
+pytest-xdist

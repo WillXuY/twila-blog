@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euo pipefail
+
 # 启动 Ollama 容器，并配置以下参数：
 # 1. 移除了 GPU 加速，云服务器没有 GPU，因此不需要设备挂载
 #    --device nvidia.com/gpu=all
@@ -11,14 +13,17 @@
 #    --network twila_network 代替 -p
 # 7. docker.io/ollama/ollama 使用官方的 Ollama 镜像（如果本地没有镜像，将从 Docker Hub 自动拉取）
 podman run -d $NETWORK_ARG \
+        --replace \
 	--name ollama \
-	--replace \
 	--restart=always \
 	-v ollama:/root/.ollama:Z \
-	docker.io/ollama/ollama
+	quay.io/willxuy/ollama
 
 # 拉取模型,使用最小的模型
 podman exec -i ollama ollama pull qwen2.5:0.5b
+
+# 可选，其他的更强大的模型
+# podman exec -i ollama ollama pull deepseek-coder:6.7b
 
 # 查看下载了那些 podman ollama 模型
 podman exec -i ollama ollama list

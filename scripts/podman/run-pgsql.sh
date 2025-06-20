@@ -17,18 +17,13 @@ trap 'unset POSTGRES_USER POSTGRES_PASSWORD POSTGRES_DB NETWORK_ARG PGDATA_DIR P
 mkdir -p "$PGDATA_DIR"
 chmod a+X "$(dirname "$PGDATA_DIR")"
 
-# 启动容器
-if podman container exists "$PG_CONTAINER_NAME"; then
-  echo "📦 容器已存在，尝试启动..."
-  podman start "$PG_CONTAINER_NAME"
-else
-  echo "📦 创建并启动容器..."
-  podman run -d $NETWORK_ARG \
-    --name "$PG_CONTAINER_NAME" \
-    -e POSTGRES_USER="$POSTGRES_USER" \
-    -e POSTGRES_PASSWORD="$POSTGRES_PASSWORD" \
-    -e POSTGRES_DB="$POSTGRES_DB" \
-    -v "$PGDATA_DIR":/var/lib/postgresql/data:Z \
-    -p 127.0.0.1:5432:5432 \
-    "$PG_IMAGE"
-fi
+echo "📦 创建并启动容器..."
+podman run -d $NETWORK_ARG \
+  --replace \
+  --name "$PG_CONTAINER_NAME" \
+  -e POSTGRES_USER="$POSTGRES_USER" \
+  -e POSTGRES_PASSWORD="$POSTGRES_PASSWORD" \
+  -e POSTGRES_DB="$POSTGRES_DB" \
+  -v "$PGDATA_DIR":/var/lib/postgresql/data:Z \
+  -p 127.0.0.1:5432:5432 \
+  "$PG_IMAGE"

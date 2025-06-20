@@ -18,4 +18,4 @@ RUN pip install -i https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple --no-cac
 
 COPY . /app
 
-CMD ["python", "wsgi.py"]
+CMD ["gunicorn", "-b", "0.0.0.0:5000", "wsgi:app"]
