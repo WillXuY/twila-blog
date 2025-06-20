@@ -31,3 +31,36 @@ def run_script(script_path: str, env_vars: Optional[Dict[str, str]] = None) -> N
     result = subprocess.run(["bash", script_path], env=env)
     if result.returncode != 0:
         raise RuntimeError(f"脚本 {script_path} 执行失败，退出码 {result.returncode}")
+
+
+def show_gpg_keys():
+    print("这里列出所有的可用 GPG keys:")
+    try:
+        subprocess.run(["gpg", "--list-keys"], check=True)
+    except FileNotFoundError:
+        print("⚠️ 未安装 gpg 命令，请先安装。")
+    except subprocess.CalledProcessError:
+        print("⚠️ 执行 gpg --list-keys 失败。")
+
+
+def ensure_network_exists(network_name: str) -> None:
+    """确保 podman 网络存在；若不存在则创建"""
+    try:
+        result = subprocess.run(
+            ["podman", "network", "inspect", network_name],
+            capture_output=True,
+            text=True,
+            check=False
+        )
+        if result.returncode == 0:
+            print(f"✅ 网络 {network_name} 已存在")
+            return
+
+        subprocess.run(
+            ["podman", "network", "create", network_name],
+            check=True
+        )
+        print(f"✅ 已创建网络 {network_name}")
+    except subprocess.CalledProcessError as e:
+        print(f"❌ 创建网络失败: {e.stderr}")
+        raise
