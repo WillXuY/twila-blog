@@ -19,7 +19,7 @@
 ** 1 - Windows 下开发环境的 [[file:content/org/windows-run.org][参考文档]]
 
 ** 2 - Debian / Unix-like 系统开发或生产环境
-- 1. 安装必要软件 Bash, python3, podman
+- 1. 安装必要软件 Bash, python3, podman, make
 
 - 2. 创建并启用 python 虚拟环境 ~make venv~
 
@@ -46,11 +46,15 @@
 sudo cp config/nginx/twila_http.conf /etc/nginx/conf.d/twila.conf
 # 在生产环境中（证书已存在）：
 sudo cp config/nginx/twila_https.conf /etc/nginx/conf.d/twila.conf
+# 启动 nginx
+sudo systemctl start nginx
 # 启用新的 nginx 规则
 sudo nginx -s reload
 #+END_SRC
 
-4. 启动完成后可以访问自定义域名,例如: [[https://twila.top]], 或者直接访问 http 的 ip 地址使用。
+4. 需要开启服务器的防火墙, 云服务商的安全组等相关内容.
+
+5. 启动完成后可以访问自定义域名,例如: [[https://twila.top]], 或者直接访问 http 的 ip 地址使用。
 
 * III - 项目结构简要说明
 #+BEGIN_SRC
