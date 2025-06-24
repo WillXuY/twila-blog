@@ -16,7 +16,7 @@
 3. 提供 Swagger UI 接口文档。
 
 * II - 项目启动指南
-** 1 - Windows 下开发环境的 [[file:content/org/windows-run.org][参考文档]]
+** 1 - Windows 下开发环境的 [[file:docs/org/windows-run.org][参考文档]]
 
 ** 2 - Debian / Unix-like 系统开发或生产环境
 - 1. 安装必要软件 Bash, python3, podman, make
