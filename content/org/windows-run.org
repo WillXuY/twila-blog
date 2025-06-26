@@ -33,13 +33,13 @@ Windows 建议配置为 *2 核 CPU + 4 GB 内存* 起步以获得更流畅体验
 - [[https://www.enterprisedb.com/downloads/postgres-postgresql-downloads][PostgreSQL 官方推荐 Windows 安装包下载网站]]
 
 *** 2. 关键安装步骤
-[[../picture/pgsql-extension.jpg]]
+[[../img/pgsql-extension.jpg]]
 这一步建议勾选 psql 命令行工具，用来运行 SQL。
-[[../picture/pgsql-password.jpg]]
+[[../img/pgsql-password.jpg]]
 这里需要输入 postgres 管理员用户的密码，需要记住，用来登陆数据库。
 
 *** 3. 安装完成后搜索并运行 *SQL Shell (psql)* 工具。
-[[../picture/psql-shell.jpg]]
+[[../img/psql-shell.jpg]]
 1. 成功启动 psql 后显示内容应该是: *Server [localhost]:*
 2. 连续回车使用默认配置直到出现这个内容: *用户 postgres 的口令:* 然后输入密码。
 3. 使用超级用户运行: [[file:../../scripts/postgresql/init_database.sql][初始化 SQL]]
