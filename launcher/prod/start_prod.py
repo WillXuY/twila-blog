@@ -1,9 +1,9 @@
 import questionary
 
-from ..common.utils import check_tools_ready, ensure_network_exists
-from .config import ProdConfig, COMMAND_REQUIRED, PODMAN_NERWORK_NAME
-from .start_all import run as run_all
-from .start_web import run as run_web
+from start_manager.common.utils import check_tools_ready, ensure_network_exists
+from start_manager.prod.config import ProdConfig, COMMAND_REQUIRED, PODMAN_NERWORK_NAME
+from start_manager.prod.start_all import run as run_all
+from start_manager.prod.start_web import run as run_web
 
 START_WEB_ONLY = "只启动 web 项目"
 START_ALL = "启动完整的数据库, ollama 和 web 项目"

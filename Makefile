@@ -12,10 +12,10 @@ venv:
 	python3 -m venv $(VENV_DIR)
 	$(PYTHON) -m pip install -i https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple --upgrade pip
 	$(PYTHON) -m pip config set global.index-url https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple
-	$(PYTHON) -m pip install -r requirements.txt
+	$(PYTHON) -m pip install -r start-manager/requirements.txt
 
 start:
-	source $(VENV_DIR)/bin/activate && $(PYTHON) start-manager/cli.py
+	source $(VENV_DIR)/bin/activate && $(PYTHON) -m start_manager.cli
 
 # 可选：清除虚拟环境
 clean:

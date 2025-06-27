@@ -1,7 +1,7 @@
 import questionary
 
-from scripts.dev import start_dev
-from scripts.prod import start_prod
+from start_manager.dev import start_dev
+from start_manager.prod import start_prod
 
 ENV_DEV = "开发环境 dev"
 ENV_PROD = "生产环境 prod"

@@ -1,7 +1,7 @@
 from pathlib import Path
 
-from . import config
-from ..common.utils import run_script
+from start_manager.dev import config
+from start_manager.common.utils import run_script
 
 
 def run() -> None:

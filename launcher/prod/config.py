@@ -9,7 +9,7 @@ from jinja2 import Template
 from pathlib import Path
 from typing import Dict
 
-from ..common.utils import show_gpg_keys
+from start_manager.common.utils import show_gpg_keys
 
 # 固定配置部分
 PODMAN_NERWORK_NAME = "twila_network"

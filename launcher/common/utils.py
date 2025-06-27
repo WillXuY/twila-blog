@@ -33,7 +33,7 @@ def run_script(script_path: str, env_vars: Optional[Dict[str, str]] = None) -> N
         raise RuntimeError(f"脚本 {script_path} 执行失败，退出码 {result.returncode}")
 
 
-def show_gpg_keys():
+def show_gpg_keys() -> None:
     print("这里列出所有的可用 GPG keys:")
     try:
         subprocess.run(["gpg", "--list-keys"], check=True)

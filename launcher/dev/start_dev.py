@@ -1,7 +1,7 @@
 import questionary
 
-from . import start_all
-from . import start_web
+from start_manager.dev import start_all
+from start_manager.dev import start_web
 
 START_WEB_ONLY = "只启动 web 项目"
 START_ALL = "启动完整的数据库, ollama 和 web 项目"
