@@ -1,13 +1,14 @@
+from config.factory import get_service_configs
+from config.prod.config import ProdConfig
+from utils.run import run_script
 from pathlib import Path
+import os
 
-from start_manager.prod.config import ProdConfig, INIT_DATABASE_SQL
-from start_manager.prod.start_web import run as run_web
-from start_manager.common.utils import run_script
-
-# 定位要运行的脚本的所在目录
-PODMAN_SCRIPT_PATH = Path(__file__).resolve().parents[1] / "podman"
-PGSQL_SCRIPT = PODMAN_SCRIPT_PATH / "run-pgsql.sh"
-OLLAMA_SCRIPT = PODMAN_SCRIPT_PATH / "run-ollama.sh"
+ROOT = Path(__file__).parents[2]
+PG_SCRIPT = ROOT / "scripts" / "podman" / "run-pgsql.sh"
+OLLAMA_SCRIPT = ROOT / "scripts" / "podman" / "run-ollama.sh"
+FLASK_SCRIPT = ROOT / "scripts" / "podman" / "run-flask-project.sh"
+INIT_DATABASE_SQL = ProdConfig.PROD_INIT_DATABASE_SQL_PATH
 
 
 def init_database() -> None:
@@ -20,14 +21,16 @@ def init_database() -> None:
     print("  $ podman exec -it pgsql psql -U twila_admin -d twila_blog -f /path/to/create_tables.sql\n")
 
 
-def run(config: ProdConfig) -> None:
-    pgsql_config = config.get_postgres_config()
-    run_script(str(PGSQL_SCRIPT), env_vars=pgsql_config)
-    ollama_config = config.get_ollama_config()
-    run_script(str(OLLAMA_SCRIPT), env_vars=ollama_config)
+def run(env: str = "prod") -> None:
+    services = get_service_configs(env)
+    pg_env = services["pg"]
+    ollama_env = services["ollama"]
+    flask_env = services["flask"]
 
+    run_script(str(PG_SCRIPT), env_vars={**os.environ, **pg_env})
+    run_script(str(OLLAMA_SCRIPT), env_vars={**os.environ, **ollama_env})
+    run_script(str(FLASK_SCRIPT), env_vars={**os.environ, **flask_env})
     init_database()
-    run_web(config)
 
 
 if __name__ == "__main__":

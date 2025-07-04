@@ -1,15 +1,17 @@
-from typing import Dict
+from typing import Dict, Iterable
 from config.base import BaseConfig
 
 
-def from_config(config: BaseConfig) -> Dict[str, str]:
+def from_config(config: BaseConfig, keys: Iterable[str] = None) -> Dict[str, str]:
     env = config.env_dict
-    return {
-        "POSTGRES_USER": env["POSTGRESQL_USER"],
-        "POSTGRES_PASSWORD": env["POSTGRESQL_PASSWORD"],
-        "POSTGRES_DB": env["POSTGRESQL_DB"],
-        "PG_CONTAINER_NAME": env["PG_CONTAINER_NAME"],
-        "PG_IMAGE": env["PG_IMAGE"],
-        "PGDATA_DIR": env["PGDATA_DIR"],
-        "NETWORK_ARG": env["NETWORK_ARG"],
-    }
+    default_keys = [
+        "POSTGRESQL_USER",
+        "POSTGRESQL_PASSWORD",
+        "POSTGRESQL_DB",
+        "PG_CONTAINER_NAME",
+        "PG_IMAGE",
+        "PGDATA_DIR",
+        "NETWORK_ARG",
+    ]
+    keys = keys or default_keys
+    return {key: env.get(key, "") for key in keys}

@@ -1,17 +1,21 @@
+from config.factory import get_service_configs
+from utils.run import run_script
 from pathlib import Path
+import os
 
-from .config import ProdConfig
-from ..common.utils import run_script
-
-# 定位要运行的脚本的所在目录
-PODMAN_SCRIPT_PATH = Path(__file__).resolve().parents[1] / "podman"
-FLASK_SCRIPT = PODMAN_SCRIPT_PATH / "run-flask-project.sh"
+# 获取 Flask 脚本路径
+SCRIPT_PATH = Path(__file__).parents[2] / "scripts" / "podman" / "run-flask-project.sh"
 
 
-def run(config: ProdConfig) -> None:
-    flask_config = config.get_flask_config()
-    run_script(str(FLASK_SCRIPT), env_vars=flask_config)
+def run(env: str = "prod") -> None:
+    services = get_service_configs(env)
+    flask_env = services["flask"]
 
+    env_vars = os.environ.copy()
+    env_vars.update(flask_env)
 
-if __name__ == "__main__":
-    run(ProdConfig())
+    print("🚀 启动 Flask 容器，使用环境配置：")
+    for k, v in flask_env.items():
+        print(f"{k}={v}")
+
+    run_script(str(SCRIPT_PATH), env_vars=env_vars)
