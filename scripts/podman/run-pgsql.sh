@@ -20,6 +20,7 @@ chmod a+X "$(dirname "$PGDATA_DIR")"
 echo "📦 创建并启动容器..."
 podman run -d $NETWORK_ARG \
   --replace \
+  --restart unless-stopped \
   --name "$PG_CONTAINER_NAME" \
   -e POSTGRES_USER="$POSTGRES_USER" \
   -e POSTGRES_PASSWORD="$POSTGRES_PASSWORD" \

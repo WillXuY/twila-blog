@@ -15,7 +15,7 @@ set -euo pipefail
 podman run -d $NETWORK_ARG \
         --replace \
 	--name ollama \
-	--restart=always \
+        --restart unless-stopped \
 	-v ollama:/root/.ollama:Z \
 	quay.io/willxuy/ollama
 

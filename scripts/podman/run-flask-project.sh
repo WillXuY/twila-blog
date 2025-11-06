@@ -15,6 +15,7 @@ set -euo pipefail
 echo "🚀 启动 Flask 容器：$CONTAINER_NAME"
 podman run -d \
   --replace \
+  --restart unless-stopped \
   --name "$CONTAINER_NAME" \
   --network "$NETWORK" \
   -p "127.0.0.1:$PORT:$PORT" \
